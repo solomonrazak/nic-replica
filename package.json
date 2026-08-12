@@ -1,0 +1,26 @@
+{
+  "name": "nic-replica",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rimraf dist",
+    "prestart": "npm run clean && npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "@prisma/client": "^6.19.3",
+    "axios": "^1.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "dotenv": "^17.4.2",
+    "prisma": "^6.19.3",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.0.0"
+  },
+  "main": "dist/src/{index.js,functions/*.js}"
+}
