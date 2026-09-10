@@ -18,13 +18,54 @@ interface LegResult {
     ftNumber?: string;
 }
 
+// interface AccountDetails {
+//   sourceAccount: string;
+//   destinationAccount: string;
+//   amount: number;
+//   narration: string;
+//   reference: string;
+// }
 
-export async function splitFunds(context: InvocationContext, input: SplitFundsShare): Promise<LegResult[]> {
+
+export async function splitFunds(context: InvocationContext, input: SplitFundsShare): Promise<{nicLegResult: LegResult, brownCardLegResult: LegResult, partial: boolean}> {
+
+    const sourceAccount = input.sourceAccount;
+
+
+  // nic share
+    let nicLegResult: LegResult 
     try {
-        // Call the NIC API to split funds
-        
+        const response = await creditAccount({
+            sourceAccount: sourceAccount,
+            destinationAccount: process.env.NIC_ACCOUNT_NUMBER || "",
+            amount: input.nicShare,
+            narration: `NIC share for transaction ${input.transactionReference}`,
+            reference: input.transactionReference,
+        })
+
+        nicLegResult = {
+            leg: "nic",
+            success: true,
+            reference: response.reference,
+            ftNumber: response.data?.ftNumber,
+        }
     } catch (error: any) {
-        context.log("Error splitting funds:", error.response?.data ?? error.message);
-        throw new Error("Failed to split funds");
+        context.error("NOthing moved for nic leg", error)
+        return {
+            nicLegResult: {
+                leg: "nic",
+                success: false,
+                error: error.response?.data ?? error.message,
+            },
+            brownCardLegResult: {
+                leg: "brownCard",
+                success: false,
+                error: error.response?.data ?? error.message,
+            },
+            partial: false
+        }
     }
+
+        
+    
 }
