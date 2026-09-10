@@ -18,7 +18,7 @@ export const searchSticker = async (transactionReference: string) => {
     }
     catch(error: any) {
         console.log("Error search for sticker:", error.response?.data ?? error.message);
-        throw new Error
+        throw new Error("Failed to search for sticker");
 
     }
 
@@ -36,6 +36,8 @@ export const approveSticker = async (input: ApproveStickerInput) => {
     }
     catch(error: any) {
         console.log("Error approving sticker:", error.response?.data ?? error.message);
-        throw new Error("Failed to approve sticker");
+        throw new Error("Failed to process sticker");
     }
 }
+
+// after here, we need another service to handle the spliting of the funds between NIC and brown card
