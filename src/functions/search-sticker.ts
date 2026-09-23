@@ -1,7 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { searchSticker } from "../services/sticker.service";
 import { isSplitRight, mapError } from "../utils/helpers";
-import {prisma} from '../../connection/prisma'
+import { prisma } from '../../connection/prisma'
 
 
 export async function searchStickerHandler(
@@ -39,8 +39,8 @@ export async function searchStickerHandler(
         // check if record exists and is completed or awaiting payment
 
         const existing = await prisma.StickerRequest.FindUnique({
-            where: {transactionReference},
-            select: {processingStatus: true, createdAt: true}
+            where: { transactionReference },
+            select: { processingStatus: true, createdAt: true }
         })
 
         const alreadyProcessed = existing?.processingStatus === "COMPLETED";
@@ -57,14 +57,14 @@ export async function searchStickerHandler(
         return {
             status: 200,
             jsonBody: {
-                ...data, stickerExists: existing, processingStatus: existing.processingStatus || null, alreadyProcessed, inProgress
+                ...data, stickerExists: !!existing, processingStatus: existing.processingStatus || null, alreadyProcessed, inProgress
             }
         }
 
- }
-catch (error: any) {
+    }
+    catch (error: any) {
 
-        const {status, message} = mapError(error);
+        const { status, message } = mapError(error);
         context.log("Sticker look up failed", message);
         return {
             status,
@@ -72,7 +72,7 @@ catch (error: any) {
                 message: message
             }
         }
-        
+
     }
 
 };

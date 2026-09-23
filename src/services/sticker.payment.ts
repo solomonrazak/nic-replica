@@ -27,13 +27,13 @@ interface LegResult {
 // }
 
 
-export async function splitFunds(context: InvocationContext, input: SplitFundsShare): Promise<{nicLegResult: LegResult, brownCardLegResult: LegResult, partialSplit: boolean}> {
+export async function splitFunds(context: InvocationContext, input: SplitFundsShare): Promise<{ nicLegResult: LegResult, brownCardLegResult: LegResult, partialSplit: boolean }> {
 
     const sourceAccount = input.sourceAccount;
 
 
-  // nic share
-    let nicLegResult: LegResult 
+    // nic share
+    let nicLegResult: LegResult
     try {
         const response = await creditAccount({
             sourceAccount: sourceAccount,
@@ -66,7 +66,7 @@ export async function splitFunds(context: InvocationContext, input: SplitFundsSh
         }
     }
 
-    // Brown card share
+    // brown card share
     let brownCardLegResult: LegResult
 
     try {
@@ -90,11 +90,7 @@ export async function splitFunds(context: InvocationContext, input: SplitFundsSh
 
         }
     }
-            
-
-    
-
-    catch(error: any){
+    catch (error: any) {
         context.error("BrownCard Account coyld not be credited", error)
         return {
             nicLegResult,
@@ -103,11 +99,11 @@ export async function splitFunds(context: InvocationContext, input: SplitFundsSh
                 success: false,
                 error: error.response?.data ?? error.message,
             },
-            partialSplit: true   
+            partialSplit: true
         }
 
     }
 
-        
-    
+
+
 }
