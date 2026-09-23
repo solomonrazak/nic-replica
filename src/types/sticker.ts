@@ -24,6 +24,18 @@ export interface ApproveStickerInput {
   bankReference: string;
 }
 
+export interface StickerReponse {
+  transactionReference: string;
+  companyName: string;
+  amountPaid: number | string |null;  
+  quantity: number;
+  paymentMode: string;
+  requestStatus: string;       
+  cost: number;                
+  NIC: number;                 
+  BROWNCARD: number;  
+}
+
 export interface WalletToBankResponseData {
   responseCode: string;
   message: string;
